@@ -31,11 +31,11 @@ export class CreateBruce implements Seed {
 
         const user = new User();
         user.id = uuid.v1();
-        user.firstName = 'Bruce';
-        user.lastName = 'Wayne';
-        user.email = 'bruce.wayne@wayne-enterprises.com';
-        user.username = 'bruce';
-        user.password = '1234';
+        user.firstName = 'Admin';
+        user.lastName = 'Admin';
+        user.email = 'admin@hrsol.com';
+        user.username = 'admin';
+        user.password = 'admin@hr';
         return await em.save(user);
     }
 

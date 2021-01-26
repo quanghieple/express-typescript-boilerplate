@@ -1,9 +1,8 @@
 import * as bcrypt from 'bcrypt';
 import { Exclude } from 'class-transformer';
 import { IsNotEmpty } from 'class-validator';
-import { BeforeInsert, Column, Entity, OneToMany, PrimaryColumn } from 'typeorm';
-
-import { Pet } from './Pet';
+import { BeforeInsert, Column, Entity, Index, JoinTable, ManyToMany, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Role } from './Role';
 
 @Entity()
 export class User {
@@ -27,14 +26,13 @@ export class User {
         });
     }
 
-    @PrimaryColumn('uuid')
-    public id: string;
+    @PrimaryGeneratedColumn()
+    public id: number;
 
     @IsNotEmpty()
     @Column({ name: 'first_name' })
     public firstName: string;
 
-    @IsNotEmpty()
     @Column({ name: 'last_name' })
     public lastName: string;
 
@@ -49,10 +47,20 @@ export class User {
 
     @IsNotEmpty()
     @Column()
+    @Index()
     public username: string;
 
-    @OneToMany(type => Pet, pet => pet.user)
-    public pets: Pet[];
+    @IsNotEmpty()
+    @Column()
+    @Index()
+    public phone: string;
+
+    @ManyToMany(() => Role)
+    @JoinTable()
+    public roles: Role[];
+
+    @ManyToOne(() => User)
+    public parent: User;
 
     public toString(): string {
         return `${this.firstName} ${this.lastName} (${this.email})`;

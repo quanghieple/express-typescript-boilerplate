@@ -1,9 +1,7 @@
 import chalk from 'chalk';
 import commander from 'commander';
 import * as path from 'path';
-import {
-    loadConnection, loadEntityFactories, loadSeeds, runSeed, setConnection
-} from 'typeorm-seeding';
+import {loadConnection, loadEntityFactories, loadSeeds, runSeed, setConnection} from 'typeorm-seeding';
 
 // Cli helper
 commander
