@@ -1,6 +1,5 @@
 import * as Faker from 'faker';
 import { define } from 'typeorm-seeding';
-import * as uuid from 'uuid';
 
 import { User } from '../../../src/api/models/User';
 
@@ -12,7 +11,6 @@ define(User, (faker: typeof Faker, settings: { role: string }) => {
     const username = faker.internet.userName(firstName, lastName);
 
     const user = new User();
-    user.id = uuid.v1();
     user.firstName = firstName;
     user.lastName = lastName;
     user.email = email;

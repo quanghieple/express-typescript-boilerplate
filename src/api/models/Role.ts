@@ -7,4 +7,8 @@ export class Role {
 
     @Column({ name: 'role_name' })
     public name: string;
+
+    constructor(name: string) {
+        this.name = name;
+    }
 }

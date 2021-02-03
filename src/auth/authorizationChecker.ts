@@ -15,14 +15,7 @@ export function authorizationChecker(connection: Connection): (action: Action, r
         // you can use them to provide granular access check
         // checker must return either boolean (true or false)
         // either promise that resolves a boolean value
-        const credentials = authService.parseBasicAuthFromRequest(action.request);
-
-        if (credentials === undefined) {
-            log.warn('No credentials given');
-            return false;
-        }
-
-        action.request.user = await authService.validateUser(credentials.username, credentials.password);
+        action.request.user = authService.parseBasicAuthFromRequest(action.request);
         if (action.request.user === undefined) {
             log.warn('Invalid credentials given');
             return false;

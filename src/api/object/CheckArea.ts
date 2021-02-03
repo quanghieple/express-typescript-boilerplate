@@ -5,4 +5,9 @@ export class CheckArea {
     public name: string;
     public radius: number;
 
+    constructor(coord: Coord, name: string, radius: number) {
+        this.coord = coord;
+        this.name = name;
+        this.radius = radius;
+    }
 }

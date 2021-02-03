@@ -1,4 +1,5 @@
 import * as express from 'express';
+import { env } from '../env';
 import { Service } from 'typedi';
 import { OrmRepository } from 'typeorm-typedi-extensions';
 
@@ -6,6 +7,7 @@ import { User } from '../api/models/User';
 import { UserRepository } from '../api/repositories/UserRepository';
 import { Logger, LoggerInterface } from '../decorators/Logger';
 
+import jwt from 'jsonwebtoken';
 @Service()
 export class AuthService {
 
@@ -14,17 +16,11 @@ export class AuthService {
         @OrmRepository() private userRepository: UserRepository
     ) { }
 
-    public parseBasicAuthFromRequest(req: express.Request): { username: string, password: string } {
+    public parseBasicAuthFromRequest(req: express.Request): User | undefined {
         const authorization = req.header('authorization');
 
-        if (authorization && authorization.split(' ')[0] === 'Basic') {
-            this.log.info('Credentials provided by the client');
-            const decodedBase64 = Buffer.from(authorization.split(' ')[1], 'base64').toString('ascii');
-            const username = decodedBase64.split(':')[0];
-            const password = decodedBase64.split(':')[1];
-            if (username && password) {
-                return { username, password };
-            }
+        if (authorization) {
+            return this.decodeJWT(authorization);
         }
 
         this.log.info('No credentials provided by the client');
@@ -43,6 +39,18 @@ export class AuthService {
         }
 
         return undefined;
+    }
+
+    public encodeJWT(user: User): string {
+        return jwt.sign({ id: user.id }, env.jwt.secret, { expiresIn: env.jwt.expried });
+    }
+
+    public decodeJWT(token: string): User | undefined {
+        try {
+            return jwt.verify(token, env.jwt.secret);
+        } catch (error) {
+            return undefined;
+        }
     }
 
 }

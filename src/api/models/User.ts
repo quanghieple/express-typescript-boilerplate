@@ -1,7 +1,7 @@
 import * as bcrypt from 'bcrypt';
 import { Exclude } from 'class-transformer';
 import { IsNotEmpty } from 'class-validator';
-import { BeforeInsert, Column, Entity, Index, JoinTable, ManyToMany, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { BeforeInsert, Column, CreateDateColumn, Entity, Index, JoinTable, ManyToMany, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 import { Role } from './Role';
 
 @Entity()
@@ -61,6 +61,12 @@ export class User {
 
     @ManyToOne(() => User)
     public parent: User;
+
+    @CreateDateColumn()
+    public created: Date;
+
+    @UpdateDateColumn()
+    public modified: Date;
 
     public toString(): string {
         return `${this.firstName} ${this.lastName} (${this.email})`;

@@ -1,4 +1,4 @@
-import { IsEmail, IsNotEmpty, IsUUID} from 'class-validator';
+import { IsEmail, IsNotEmpty} from 'class-validator';
 import {
     Authorized, Body, Delete, Get, JsonController, OnUndefined, Param, Post, Put, Req
 } from 'routing-controllers';
@@ -7,12 +7,12 @@ import { OpenAPI, ResponseSchema } from 'routing-controllers-openapi';
 import { UserNotFoundError } from '../errors/UserNotFoundError';
 import { User } from '../models/User';
 import { UserService } from '../services/UserService';
+import { AuthService } from '../../auth/AuthService';
 
 class BaseUser {
     @IsNotEmpty()
     public firstName: string;
 
-    @IsNotEmpty()
     public lastName: string;
 
     @IsEmail()
@@ -21,11 +21,18 @@ class BaseUser {
 
     @IsNotEmpty()
     public username: string;
+
+    @IsNotEmpty()
+    public phone: string;
 }
 
 export class UserResponse extends BaseUser {
-    @IsUUID()
     public id: string;
+}
+
+export class LoginResponse {
+    public token: string;
+    public user: User;
 }
 
 class CreateUserBody extends BaseUser {
@@ -39,7 +46,8 @@ class CreateUserBody extends BaseUser {
 export class UserController {
 
     constructor(
-        private userService: UserService
+        private userService: UserService,
+        private authService: AuthService
     ) { }
 
     @Get('/me')
@@ -64,6 +72,7 @@ export class UserController {
         user.lastName = body.lastName;
         user.password = body.password;
         user.username = body.username;
+        user.phone = body.phone;
 
         return this.userService.create(user);
     }
@@ -76,6 +85,7 @@ export class UserController {
         user.firstName = body.firstName;
         user.lastName = body.lastName;
         user.username = body.username;
+        user.phone = body.phone;
         user.id = id;
 
         return this.userService.update(user);
@@ -84,6 +94,16 @@ export class UserController {
     @Delete('/:id')
     public delete(@Param('id') id: number): Promise<void> {
         return this.userService.delete(id);
+    }
+
+    @Post('/login')
+    public async login(@Body() body: {username: string, password: string}): Promise<any> {
+        const user = await this.authService.validateUser(body.username, body.password);
+        if (user) {
+            const token = this.authService.encodeJWT(user);
+            return {user, token};
+        }
+        return undefined;
     }
 
 }
