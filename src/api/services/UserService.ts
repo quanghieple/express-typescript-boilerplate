@@ -17,11 +17,20 @@ export class UserService {
     ) { }
 
     public findOne(id: number): Promise<User | undefined> {
-        this.log.info('Find one user');
         return this.userRepository.findOne({ id });
     }
 
+    public getFullUser(id: string): Promise<User> {
+        return this.userRepository.findOne({
+            where: {
+                id,
+            },
+            relations: ["roles", "parent"],
+        });
+    }
+
     public async create(user: User): Promise<User> {
+        this.log.info("Creating user");
         const newUser = await this.userRepository.save(user);
         this.eventDispatcher.dispatch(events.user.created, newUser);
         return newUser;

@@ -11,8 +11,7 @@ define(User, (faker: typeof Faker, settings: { role: string }) => {
     const username = faker.internet.userName(firstName, lastName);
 
     const user = new User();
-    user.firstName = firstName;
-    user.lastName = lastName;
+    user.name = firstName;
     user.email = email;
     user.username = username;
     user.password = '123456';

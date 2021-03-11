@@ -1,11 +1,11 @@
-import { Role } from '../../api/models/Role';
-import { Setting } from '../../api/models/Setting';
-import { CheckArea } from '../../api/object/CheckArea';
-import { Coord } from '../../api/object/Coord';
 import { Connection } from 'typeorm';
 import { Factory, Seeder } from 'typeorm-seeding';
 
+import { Role } from '../../api/models/Role';
+import { Setting } from '../../api/models/Setting';
 import { User } from '../../api/models/User';
+import { CheckArea } from '../../api/object/CheckArea';
+import { Coord } from '../../api/object/Coord';
 
 export class CreateAdmin implements Seeder {
 
@@ -37,12 +37,14 @@ export class CreateAdmin implements Seeder {
 
         const user = new User();
         user.roles = [adminRole];
-        user.firstName = 'Admin';
-        user.lastName = 'Admin';
+        user.name = 'Admin';
         user.email = 'admin@hrsol.com';
+        user.birth = new Date();
         user.username = 'admin';
         user.password = 'admin@hr';
         user.phone = "0123456789";
+        // user.province = new Geo(79, "Thành phố Hồ Chí Minh", "Thành phố Trung ương", undefined);
+        // user.city = new Geo(760, "Quận 1", "Quận", user.province);
         const savedUser = await em.save(user);
 
         const setting = new Setting();

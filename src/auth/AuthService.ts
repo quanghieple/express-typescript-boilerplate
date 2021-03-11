@@ -1,13 +1,13 @@
 import * as express from 'express';
-import { env } from '../env';
+import jwt from 'jsonwebtoken';
 import { Service } from 'typedi';
 import { OrmRepository } from 'typeorm-typedi-extensions';
 
 import { User } from '../api/models/User';
 import { UserRepository } from '../api/repositories/UserRepository';
 import { Logger, LoggerInterface } from '../decorators/Logger';
+import { env } from '../env';
 
-import jwt from 'jsonwebtoken';
 @Service()
 export class AuthService {
 
@@ -20,7 +20,8 @@ export class AuthService {
         const authorization = req.header('authorization');
 
         if (authorization) {
-            return this.decodeJWT(authorization);
+            const decrypt = this.decryptJWT(authorization);
+            return decrypt ? decrypt.user : undefined;
         }
 
         this.log.info('No credentials provided by the client');
@@ -32,20 +33,22 @@ export class AuthService {
             where: {
                 username,
             },
+            relations: ["roles"],
         });
 
-        if (await User.comparePassword(user, password)) {
+        if (user && await User.comparePassword(user, password)) {
             return user;
         }
 
         return undefined;
     }
 
-    public encodeJWT(user: User): string {
-        return jwt.sign({ id: user.id }, env.jwt.secret, { expiresIn: env.jwt.expried });
+    public encryptJWT(user: User): string {
+        const encryptUser = {id: user.id, roles: user.roles, parent: user.parent ? user.parent.id : undefined};
+        return jwt.sign({ user: encryptUser }, env.jwt.secret, { expiresIn: env.jwt.expried });
     }
 
-    public decodeJWT(token: string): User | undefined {
+    public decryptJWT(token: string): any | undefined {
         try {
             return jwt.verify(token, env.jwt.secret);
         } catch (error) {

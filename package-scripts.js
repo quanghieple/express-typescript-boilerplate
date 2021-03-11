@@ -27,7 +27,7 @@ module.exports = {
             },
             script: series(
                 'nps banner.serve',
-                'nodemon --watch src --watch .env'
+                'nodemon --watch src --watch .env -r tsconfig-paths/register -r ts-node/register ./src/app.ts'
             ),
             description: 'Serves the current app and watches for changes to restart it'
         },

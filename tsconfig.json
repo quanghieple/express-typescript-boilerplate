@@ -38,7 +38,7 @@
             "esnext.asynciterable"
         ],
         "paths": {
-            "@/*": ["./src/*"]
+            "@/*": ["src/*"]
         }
     }
 }

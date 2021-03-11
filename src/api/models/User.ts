@@ -1,7 +1,11 @@
 import * as bcrypt from 'bcrypt';
 import { Exclude } from 'class-transformer';
 import { IsNotEmpty } from 'class-validator';
-import { BeforeInsert, Column, CreateDateColumn, Entity, Index, JoinTable, ManyToMany, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
+import {
+    BeforeInsert, Column, CreateDateColumn, Entity, Index, JoinTable, ManyToMany, ManyToOne,
+    PrimaryGeneratedColumn, UpdateDateColumn
+} from 'typeorm';
+
 import { Role } from './Role';
 
 @Entity()
@@ -30,11 +34,11 @@ export class User {
     public id: number;
 
     @IsNotEmpty()
-    @Column({ name: 'first_name' })
-    public firstName: string;
+    @Column({ name: 'name' })
+    public name: string;
 
-    @Column({ name: 'last_name' })
-    public lastName: string;
+    @Column({type: "timestamp"})
+    public birth: Date;
 
     @IsNotEmpty()
     @Column()
@@ -55,6 +59,18 @@ export class User {
     @Index()
     public phone: string;
 
+    @Column({default: ""})
+    public address: string;
+
+    @Column({default: ""})
+    public profile: string;
+
+    @Column({default: false})
+    public disabled: boolean;
+
+    @Column({default: ""})
+    public photoURL: string;
+
     @ManyToMany(() => Role)
     @JoinTable()
     public roles: Role[];
@@ -62,14 +78,14 @@ export class User {
     @ManyToOne(() => User)
     public parent: User;
 
-    @CreateDateColumn()
+    @CreateDateColumn({type: "timestamp"})
     public created: Date;
 
-    @UpdateDateColumn()
+    @UpdateDateColumn({type: "timestamp"})
     public modified: Date;
 
     public toString(): string {
-        return `${this.firstName} ${this.lastName} (${this.email})`;
+        return `${this.name} ${this.email}`;
     }
 
     @BeforeInsert()

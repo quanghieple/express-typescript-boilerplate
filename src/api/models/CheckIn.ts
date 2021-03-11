@@ -1,4 +1,5 @@
 import { Column, Entity, Index, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+
 import { Shift } from './Shift';
 import { User } from './User';
 
@@ -9,7 +10,7 @@ export class CheckIn {
     public id: number;
 
     @Index()
-    @Column()
+    @Column({type: 'timestamp'})
     public time: Date;
 
     @Index()
