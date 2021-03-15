@@ -2,8 +2,8 @@ import * as bcrypt from 'bcrypt';
 import { Exclude } from 'class-transformer';
 import { IsNotEmpty } from 'class-validator';
 import {
-    BeforeInsert, Column, CreateDateColumn, Entity, Index, JoinTable, ManyToMany, ManyToOne,
-    PrimaryGeneratedColumn, UpdateDateColumn
+    BeforeInsert, Column, CreateDateColumn, Entity, Index, ManyToOne, PrimaryGeneratedColumn,
+    UpdateDateColumn
 } from 'typeorm';
 
 import { Role } from './Role';
@@ -71,9 +71,8 @@ export class User {
     @Column({default: ""})
     public photoURL: string;
 
-    @ManyToMany(() => Role)
-    @JoinTable()
-    public roles: Role[];
+    @ManyToOne(() => Role)
+    public role: Role;
 
     @ManyToOne(() => User)
     public parent: User;
@@ -91,6 +90,19 @@ export class User {
     @BeforeInsert()
     public async hashPassword(): Promise<void> {
         this.password = await User.hashPassword(this.password);
+    }
+
+    public withId(id: number): User {
+        this.id = id;
+        return this;
+    }
+
+    public setRole(role: Role, parent: any): void {
+        if (role.priority > parent.priority) {
+            this.role = (new Role()).withId(parent.id);
+        } else {
+            this.role = role;
+        }
     }
 
 }

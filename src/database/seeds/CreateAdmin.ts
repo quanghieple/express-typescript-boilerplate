@@ -31,18 +31,19 @@ export class CreateAdmin implements Seeder {
 
         // const connection = await factory.getConnection();
         const em = connection.createEntityManager();
-        const adminRole = await em.save(new Role('admin'));
-        await em.save(new Role('manager'));
-        await em.save(new Role('user'));
+        const adminRole = await em.save(new Role('Admin', 10));
+        await em.save(new Role('Manager', 5));
+        await em.save(new Role('User', 1));
 
         const user = new User();
-        user.roles = [adminRole];
+        user.role = adminRole;
         user.name = 'Admin';
         user.email = 'admin@hrsol.com';
         user.birth = new Date();
         user.username = 'admin';
         user.password = 'admin@hr';
         user.phone = "0123456789";
+        user.parent = (new User()).withId(1);
         // user.province = new Geo(79, "Thành phố Hồ Chí Minh", "Thành phố Trung ương", undefined);
         // user.city = new Geo(760, "Quận 1", "Quận", user.province);
         const savedUser = await em.save(user);

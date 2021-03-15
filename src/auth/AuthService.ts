@@ -33,7 +33,7 @@ export class AuthService {
             where: {
                 username,
             },
-            relations: ["roles"],
+            relations: ["role", "parent"],
         });
 
         if (user && await User.comparePassword(user, password)) {
@@ -44,7 +44,7 @@ export class AuthService {
     }
 
     public encryptJWT(user: User): string {
-        const encryptUser = {id: user.id, roles: user.roles, parent: user.parent ? user.parent.id : undefined};
+        const encryptUser = {id: user.id, role: user.role, parent: user.parent ? user.parent.id : undefined};
         return jwt.sign({ user: encryptUser }, env.jwt.secret, { expiresIn: env.jwt.expried });
     }
 
