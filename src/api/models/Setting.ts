@@ -9,7 +9,7 @@ export class Setting {
     public id: number;
 
     @Column({type: 'json'})
-    public location: CheckArea;
+    public location: CheckArea[];
 
     @ManyToOne(() => User)
     public user: User;

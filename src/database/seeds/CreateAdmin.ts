@@ -43,13 +43,12 @@ export class CreateAdmin implements Seeder {
         user.username = 'admin';
         user.password = 'admin@hr';
         user.phone = "0123456789";
-        user.parent = (new User()).withId(1);
         // user.province = new Geo(79, "Thành phố Hồ Chí Minh", "Thành phố Trung ương", undefined);
         // user.city = new Geo(760, "Quận 1", "Quận", user.province);
         const savedUser = await em.save(user);
 
         const setting = new Setting();
-        setting.location = new CheckArea(new Coord(10.7668435, 106.7078514), "default", 1000);
+        setting.location = [new CheckArea(new Coord(10.7668435, 106.7078514), "default", 1000)];
         setting.user = savedUser;
         await em.save(setting);
     }

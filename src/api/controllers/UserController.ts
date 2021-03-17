@@ -113,4 +113,9 @@ export class UserController {
     public getListUser(@Req() req: any): Promise<Response> {
         return this.userService.getListUser(req.user).then(users => success(users));
     }
+
+    // @Get('/setting/dkm')
+    // public getSetting(@Req() req: any): Promise<Setting> {
+    //     return this.userService.getSetting(req.user);
+    // }
 }

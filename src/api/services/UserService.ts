@@ -6,9 +6,11 @@ import { EventDispatcher, EventDispatcherInterface } from '../../decorators/Even
 import { Logger, LoggerInterface } from '../../decorators/Logger';
 import { CreateUserBody } from '../controllers/UserController';
 import { Role } from '../models/Role';
+import { Setting } from '../models/Setting';
 import { User } from '../models/User';
 import { RoleRepository } from '../repositories/RoleRepository';
 import { UserRepository } from '../repositories/UserRepository';
+import { SettingRepository } from '../repositories/SettingRepository';
 import { events } from '../subscribers/events';
 
 @Service()
@@ -18,7 +20,8 @@ export class UserService {
         @OrmRepository() private userRepository: UserRepository,
         @EventDispatcher() private eventDispatcher: EventDispatcherInterface,
         @Logger(__filename) private log: LoggerInterface,
-        @OrmRepository() private roleRepository: RoleRepository
+        @OrmRepository() private roleRepository: RoleRepository,
+        @OrmRepository() private settingRepository: SettingRepository
     ) { }
 
     public findOne(id: number): Promise<User | undefined> {
@@ -82,6 +85,10 @@ export class UserService {
 
     public getListUser(user: any): Promise<User[]> {
         return this.userRepository.find({where: {parent: {id: user.id}}});
+    }
+
+    public getSetting(user: any): Promise<Setting> {
+        return this.settingRepository.findOne({user: {id: user.id}});
     }
 
     private assignUpdate(user: User, body: any, full: boolean): User {
