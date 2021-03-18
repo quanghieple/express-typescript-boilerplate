@@ -6,7 +6,9 @@ import { OpenAPI, ResponseSchema } from 'routing-controllers-openapi';
 
 import { UserNotFoundError } from '../errors/UserNotFoundError';
 import { Role } from '../models/Role';
+import { Setting } from '../models/Setting';
 import { User } from '../models/User';
+import { CheckArea } from '../object/CheckArea';
 import { UserService } from '../services/UserService';
 import { UserError } from './responses/ErrorCode';
 import { fail, Response, success } from './responses/Response';
@@ -114,8 +116,13 @@ export class UserController {
         return this.userService.getListUser(req.user).then(users => success(users));
     }
 
-    // @Get('/setting/dkm')
-    // public getSetting(@Req() req: any): Promise<Setting> {
-    //     return this.userService.getSetting(req.user);
-    // }
+    @Get('/setting/get')
+    public getSetting(@Req() req: any): Promise<Setting> {
+        return this.userService.getSetting(req.user);
+    }
+
+    @Put('/setting/localtion')
+    public addSetting(@Body() body: CheckArea[], @Req() req: any): Promise<any> {
+        return this.userService.setLocation(req.user, body);
+    }
 }

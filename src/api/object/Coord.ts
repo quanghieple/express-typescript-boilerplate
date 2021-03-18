@@ -1,9 +1,9 @@
 export class Coord {
     public lat: number;
-    public lon: number;
+    public lng: number;
 
-    constructor(lat: number, lon: number) {
+    constructor(lat: number, lng: number) {
         this.lat = lat;
-        this.lon = lon;
+        this.lng = lng;
     }
 }

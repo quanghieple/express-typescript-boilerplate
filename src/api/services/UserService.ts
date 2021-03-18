@@ -1,5 +1,5 @@
 import { Service } from 'typedi';
-import { LessThanOrEqual } from 'typeorm';
+import { getConnection, LessThanOrEqual, UpdateResult } from 'typeorm';
 import { OrmRepository } from 'typeorm-typedi-extensions';
 
 import { EventDispatcher, EventDispatcherInterface } from '../../decorators/EventDispatcher';
@@ -12,6 +12,7 @@ import { RoleRepository } from '../repositories/RoleRepository';
 import { UserRepository } from '../repositories/UserRepository';
 import { SettingRepository } from '../repositories/SettingRepository';
 import { events } from '../subscribers/events';
+import { CheckArea } from '../object/CheckArea';
 
 @Service()
 export class UserService {
@@ -89,6 +90,16 @@ export class UserService {
 
     public getSetting(user: any): Promise<Setting> {
         return this.settingRepository.findOne({user: {id: user.id}});
+    }
+
+    public setLocation(user: any, location: CheckArea[]): Promise<UpdateResult> {
+        return getConnection()
+        .createQueryBuilder()
+        .innerJoin(User, "user")
+        .update(Setting)
+        .set({ location })
+        .where("user.id = :id", { id: user.id })
+        .execute();
     }
 
     private assignUpdate(user: User, body: any, full: boolean): User {
