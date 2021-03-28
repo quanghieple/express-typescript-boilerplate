@@ -88,8 +88,8 @@ export class UserService {
         return this.userRepository.find({where: {parent: {id: user.id}}});
     }
 
-    public getSetting(user: any): Promise<Setting> {
-        return this.settingRepository.findOne({user: {id: user.id}});
+    public getSetting(id: number): Promise<Setting> {
+        return this.settingRepository.findOne({user: {id}});
     }
 
     public setLocation(user: any, location: CheckArea[]): Promise<UpdateResult> {

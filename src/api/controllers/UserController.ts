@@ -118,7 +118,12 @@ export class UserController {
 
     @Get('/setting/get')
     public getSetting(@Req() req: any): Promise<Setting> {
-        return this.userService.getSetting(req.user);
+        return this.userService.getSetting(req.user.id);
+    }
+
+    @Get('/parent/setting')
+    public getParentSetting(@Req() req: any): Promise<Setting> {
+        return this.userService.getSetting(req.user.parent.id);
     }
 
     @Put('/setting/localtion')

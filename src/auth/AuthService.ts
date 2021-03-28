@@ -44,7 +44,7 @@ export class AuthService {
     }
 
     public encryptJWT(user: User): string {
-        const encryptUser = {id: user.id, role: user.role, parent: user.parent ? user.parent.id : undefined};
+        const encryptUser = {id: user.id, role: user.role, parent: {id: user.parent.id, role: user.parent.role}};
         return jwt.sign({ user: encryptUser }, env.jwt.secret, { expiresIn: env.jwt.expried });
     }
 

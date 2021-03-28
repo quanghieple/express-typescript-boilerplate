@@ -5,3 +5,9 @@ export class UserNotFoundError extends HttpError {
         super(404, 'User not found!');
     }
 }
+
+export class ObjectNotFoundError extends HttpError {
+    constructor() {
+        super(200, "");
+    }
+}

@@ -3,23 +3,54 @@ import { Column, Entity, Index, ManyToOne, PrimaryGeneratedColumn } from 'typeor
 import { Shift } from './Shift';
 import { User } from './User';
 
+export enum CheckinStatus {
+    Checkin = 1,
+    Checkout = 2,
+}
 @Entity()
+@Index(["month", "user"])
 export class CheckIn {
-
     @PrimaryGeneratedColumn()
     public id: number;
 
-    @Index()
     @Column({type: 'timestamp'})
-    public time: Date;
+    public inn: Date;
+
+    @Column({type: 'timestamp'})
+    public out: Date;
 
     @Index()
     @Column()
-    public week: string;
+    public status: number;
+
+    @Index()
+    @Column()
+    public month: string;
+
+    @Column()
+    public date: number;
+
+    @Column({default: ""})
+    public noteIn: string;
+
+    @Column({default: ""})
+    public noteOut: string;
 
     @ManyToOne(() => User)
     public user: User;
 
     @ManyToOne(() => Shift)
     public shift: Shift;
+
+    constructor(time: number, user: User, shift: Shift, note: string) {
+        const date = new Date(time);
+        this.inn = date;
+        this.out = new Date();
+        this.status = CheckinStatus.Checkin;
+        this.user = user;
+        this.shift = shift;
+        this.noteIn = note;
+        this.date = date.getDate();
+        this.month = date.getMonth() + "-" + date.getFullYear();
+    }
 }
