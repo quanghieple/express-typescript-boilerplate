@@ -1,12 +1,13 @@
 import * as express from 'express';
-import GraphQLHTTP from 'express-graphql';
+// import GraphQLHTTP from 'express-graphql';
 import { MicroframeworkLoader, MicroframeworkSettings } from 'microframework-w3tec';
 import * as path from 'path';
 import { buildSchema } from 'type-graphql';
 import Container from 'typedi';
 
 import { env } from '../env';
-import { getErrorCode, getErrorMessage, handlingErrors } from '../lib/graphql';
+// import { getErrorCode, getErrorMessage, handlingErrors } from '../lib/graphql';
+import { handlingErrors } from '../lib/graphql';
 
 export const graphqlLoader: MicroframeworkLoader = async (settings: MicroframeworkSettings | undefined) => {
     if (settings && env.graphql.enabled) {
@@ -30,16 +31,16 @@ export const graphqlLoader: MicroframeworkLoader = async (settings: Microframewo
             container.set('context', context); // place context or other data in container
 
             // Setup GraphQL Server
-            GraphQLHTTP({
-                schema,
-                context,
-                graphiql: env.graphql.editor,
-                formatError: error => ({
-                    code: getErrorCode(error.message),
-                    message: getErrorMessage(error.message),
-                    path: error.path,
-                }),
-            })(request, response);
+            // GraphQLHTTP({
+            //     schema,
+            //     context,
+            //     graphiql: env.graphql.editor,
+            //     formatError: error => ({
+            //         code: getErrorCode(error.message),
+            //         message: getErrorMessage(error.message),
+            //         path: error.path,
+            //     }),
+            // })(request, response);
         });
 
     }
