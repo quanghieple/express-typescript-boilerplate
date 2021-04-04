@@ -17,3 +17,10 @@ class CheckInController {
     public readonly TIME_TIMEOUT = this.code + 3;
 }
 export const CheckInError = new CheckInController();
+
+// HomeController
+class HomeController {
+    public readonly code = 0;
+    public readonly INVALID_LOGIN = this.code + 1;
+}
+export const HomeError = new HomeController();
