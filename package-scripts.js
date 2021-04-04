@@ -11,7 +11,7 @@ module.exports = {
          * Starts the builded app from the dist directory.
          */
         start: {
-            script: 'cross-env NODE_ENV=production node -r tsconfig-paths/register -r ts-node/register dist/app.js',
+            script: 'cross-env node -r tsconfig-paths/register -r ts-node/register dist/app.js',
             description: 'Starts the builded app',
         },
         /**

@@ -6,17 +6,29 @@ import {
     getOsEnv, getOsEnvOptional, getOsPath, getOsPaths, normalizePort, toBool, toNumber
 } from './lib/env';
 
+const getEnvPrefix = (NODE_ENV: string): string => {
+    if (NODE_ENV === 'test') {
+        return '.test';
+    } else if (NODE_ENV === 'production') {
+        return '.production';
+    } else if (NODE_ENV === 'staging') {
+        return '.staging';
+    } else {
+        return '';
+    }
+};
+
 /**
  * Load .env file or for tests the .env.test file.
  */
-dotenv.config({ path: path.join(process.cwd(), `.env${((process.env.NODE_ENV === 'test') ? '.test' : '')}`) });
+dotenv.config({ path: path.join(process.cwd(), `.env${getEnvPrefix(process.env.NODE_ENV)}`) });
 
 /**
  * Environment variables
  */
 export const env = {
     node: process.env.NODE_ENV || 'development',
-    isProduction: process.env.NODE_ENV === 'production',
+    isProduction: process.env.NODE_ENV === 'production' || process.env.NODE_ENV === 'staging',
     isTest: process.env.NODE_ENV === 'test',
     isDevelopment: process.env.NODE_ENV === 'development',
     app: {
