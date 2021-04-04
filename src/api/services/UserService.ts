@@ -8,11 +8,11 @@ import { CreateUserBody } from '../controllers/UserController';
 import { Role } from '../models/Role';
 import { Setting } from '../models/Setting';
 import { User } from '../models/User';
-import { RoleRepository } from '../repositories/RoleRepository';
-import { UserRepository } from '../repositories/UserRepository';
-import { SettingRepository } from '../repositories/SettingRepository';
-import { events } from '../subscribers/events';
 import { CheckArea } from '../object/CheckArea';
+import { RoleRepository } from '../repositories/RoleRepository';
+import { SettingRepository } from '../repositories/SettingRepository';
+import { UserRepository } from '../repositories/UserRepository';
+import { events } from '../subscribers/events';
 
 @Service()
 export class UserService {
@@ -100,6 +100,21 @@ export class UserService {
         .set({ location })
         .where("user.id = :id", { id: user.id })
         .execute();
+    }
+
+    public async login(username: string, password: string): Promise<User | undefined> {
+        const user = await this.userRepository.findOne({
+            where: {
+                username,
+            },
+            relations: ["role", "parent"],
+        });
+
+        if (user && await User.comparePassword(user, password)) {
+            return user;
+        }
+
+        return undefined;
     }
 
     private assignUpdate(user: User, body: any, full: boolean): User {

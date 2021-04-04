@@ -1,10 +1,8 @@
 import * as express from 'express';
 import jwt from 'jsonwebtoken';
 import { Service } from 'typedi';
-import { OrmRepository } from 'typeorm-typedi-extensions';
 
 import { User } from '../api/models/User';
-import { UserRepository } from '../api/repositories/UserRepository';
 import { Logger, LoggerInterface } from '../decorators/Logger';
 import { env } from '../env';
 
@@ -12,8 +10,7 @@ import { env } from '../env';
 export class AuthService {
 
     constructor(
-        @Logger(__filename) private log: LoggerInterface,
-        @OrmRepository() private userRepository: UserRepository
+        @Logger(__filename) private log: LoggerInterface
     ) { }
 
     public parseBasicAuthFromRequest(req: express.Request): User | undefined {
@@ -25,21 +22,6 @@ export class AuthService {
         }
 
         this.log.info('No credentials provided by the client');
-        return undefined;
-    }
-
-    public async validateUser(username: string, password: string): Promise<User> {
-        const user = await this.userRepository.findOne({
-            where: {
-                username,
-            },
-            relations: ["role", "parent"],
-        });
-
-        if (user && await User.comparePassword(user, password)) {
-            return user;
-        }
-
         return undefined;
     }
 
