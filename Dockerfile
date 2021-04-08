@@ -4,7 +4,7 @@ FROM node:alpine
 WORKDIR /usr/src/app
 
 # Install runtime dependencies
-RUN npm install yarn -g
+# RUN npm install yarn -g
 
 # Copy app source to work directory
 COPY . /usr/src/app
