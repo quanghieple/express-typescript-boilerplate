@@ -133,7 +133,6 @@
     "mock-express-response": "^0.2.1",
     "ncp": "^2.0.0",
     "nock": "10.0.0",
-    "sqlite3": "^4.0.0",
     "ts-jest": "^26.5.4"
   }
 }

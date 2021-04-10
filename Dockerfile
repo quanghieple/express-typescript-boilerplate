@@ -10,7 +10,7 @@ WORKDIR /usr/src/app
 COPY . /usr/src/app
 
 # Install app dependencies
-RUN yarn install
+RUN npm install
 
 # Build and run the app
 CMD npm start serve
