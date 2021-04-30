@@ -7,6 +7,7 @@ import { OpenAPI, ResponseSchema } from 'routing-controllers-openapi';
 import { UserNotFoundError } from '../errors/UserNotFoundError';
 import { Role } from '../models/Role';
 import { Setting } from '../models/Setting';
+import { Shift } from '../models/Shift';
 import { User } from '../models/User';
 import { CheckArea } from '../object/CheckArea';
 import { UserService } from '../services/UserService';
@@ -127,7 +128,12 @@ export class UserController {
     }
 
     @Put('/setting/localtion')
-    public addSetting(@Body() body: CheckArea[], @Req() req: any): Promise<any> {
+    public addSettingLocation(@Body() body: CheckArea[], @Req() req: any): Promise<any> {
         return this.userService.setLocation(req.user, body);
+    }
+
+    @Put('/setting/shift')
+    public addSettingShift(@Body() body: Shift[], @Req() req: any): Promise<any> {
+        return this.userService.setShift(req.user, body);
     }
 }
