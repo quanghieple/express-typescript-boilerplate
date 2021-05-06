@@ -4,7 +4,7 @@ import { AuthService } from '@/auth/AuthService';
 
 import { UserNotFoundError } from '../errors/UserNotFoundError';
 import { UserService } from '../services/UserService';
-import { HomeError } from './responses/ErrorCode';
+import { CommonError } from './responses/ErrorCode';
 import { fail, Response, success } from './responses/Response';
 
 @JsonController()
@@ -19,7 +19,7 @@ export class HomeController {
             const token = this.authService.encryptJWT(user);
             return success({user, token});
         } else {
-            return fail(HomeError.INVALID_LOGIN);
+            return fail(CommonError.INVALID_LOGIN);
         }
     }
 }

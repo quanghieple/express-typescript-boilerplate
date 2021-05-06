@@ -11,7 +11,7 @@ import { SettingRepository } from '../repositories/SettingRepository';
 import { CheckInService } from '../services/CheckInService';
 import { CheckTimeLimit } from '../utils/DateUtil';
 import { getDistance } from '../utils/MapUtil';
-import { CheckInError } from './responses/ErrorCode';
+import { CheckInError, CommonError } from './responses/ErrorCode';
 import { fail, Response, success } from './responses/Response';
 
 const secretQR = 'secret key 123';
@@ -88,13 +88,18 @@ export class CheckInController {
         return this.checkinService.getCurrentShift(req.user);
     }
 
-    @Get('/shift/list')
-    public shiftList(@Req() req: any): Promise<Shift[]> {
-        return this.settingRepository.findOne({user: {id: req.user.parent.id}}).then(s => s.shift);
-    }
-
     @Get('/history')
     public getHistory(@Req() req: any, @QueryParam('month') month: string): Promise<CheckIn[]> {
         return this.checkinService.getHistory(req.user, month);
+    }
+
+    @Post('/shift/update')
+    public newShift(@Body() body: Shift, @Req() req: any): Promise<Response> {
+        return this.checkinService.saveShift(body).then(shift => success(shift)).catch(err => fail(CommonError.UPDATE_FAILED, err));
+    }
+
+    @Get('/shift/list')
+    public getAllShift(): Promise<Shift[]> {
+        return this.checkinService.getAllShift();
     }
 }

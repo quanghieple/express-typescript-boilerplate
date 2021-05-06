@@ -7,11 +7,13 @@ import { CheckIn, CheckinStatus } from '../models/CheckIn';
 import { Shift } from '../models/Shift';
 import { User } from '../models/User';
 import { CheckInRepository } from '../repositories/CheckInRepository';
+import { ShiftRepository } from '../repositories/ShiftRepository';
 
 @Service()
 export class CheckInService {
     constructor(
         @OrmRepository() private checkinRepository: CheckInRepository,
+        @OrmRepository() private shiftRepository: ShiftRepository,
         @Logger(__filename) private log: LoggerInterface
     ) { }
 
@@ -44,5 +46,13 @@ export class CheckInService {
             where: {user: { id : user.id}, month},
             relations: ["shift"],
         });
+    }
+
+    public saveShift(shift: Shift): Promise<Shift> {
+        return this.shiftRepository.save(shift);
+    }
+
+    public getAllShift(): Promise<Shift[]> {
+        return this.shiftRepository.find();
     }
 }

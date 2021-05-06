@@ -7,7 +7,6 @@ import { Logger, LoggerInterface } from '../../decorators/Logger';
 import { CreateUserBody } from '../controllers/UserController';
 import { Role } from '../models/Role';
 import { Setting } from '../models/Setting';
-import { Shift } from '../models/Shift';
 import { User } from '../models/User';
 import { CheckArea } from '../object/CheckArea';
 import { RoleRepository } from '../repositories/RoleRepository';
@@ -99,16 +98,6 @@ export class UserService {
         .innerJoin(User, "user")
         .update(Setting)
         .set({ location })
-        .where("user.id = :id", { id: user.id })
-        .execute();
-    }
-
-    public setShift(user: any, shift: Shift[]): Promise<UpdateResult> {
-        return getConnection()
-        .createQueryBuilder()
-        .innerJoin(User, "user")
-        .update(Setting)
-        .set({ shift })
         .where("user.id = :id", { id: user.id })
         .execute();
     }

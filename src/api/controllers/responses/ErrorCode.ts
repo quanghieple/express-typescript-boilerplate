@@ -22,5 +22,6 @@ export const CheckInError = new CheckInController();
 class HomeController {
     public readonly code = 0;
     public readonly INVALID_LOGIN = this.code + 1;
+    public readonly UPDATE_FAILED = this.code + 2;
 }
-export const HomeError = new HomeController();
+export const CommonError = new HomeController();
