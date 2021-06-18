@@ -6,6 +6,7 @@ import { User } from './User';
 export enum CheckinStatus {
     Checkin = 1,
     Checkout = 2,
+    forgot = 3,
 }
 @Entity()
 @Index(["month", "user"])

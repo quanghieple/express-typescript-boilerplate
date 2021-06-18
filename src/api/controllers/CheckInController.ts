@@ -1,34 +1,32 @@
 import CryptoJS from 'crypto-js';
 import {
-    Authorized, Body, Get, JsonController, OnUndefined, Post, QueryParam, Req
+    Authorized, Body, Get, JsonController, OnUndefined, Param, Post, QueryParam, Req
 } from 'routing-controllers';
 import { OpenAPI } from 'routing-controllers-openapi';
 import { OrmRepository } from 'typeorm-typedi-extensions';
 
 import { CheckIn } from '../models/CheckIn';
+import { RequestUpdate } from '../models/RequestUpdate';
+
 import { Shift } from '../models/Shift';
+import { CheckInRepository } from '../repositories/CheckInRepository';
 import { SettingRepository } from '../repositories/SettingRepository';
 import { CheckInService } from '../services/CheckInService';
 import { CheckTimeLimit } from '../utils/DateUtil';
 import { getDistance } from '../utils/MapUtil';
+import { BaseCheckin, WorkShiftUpdate } from './requests/Checkin';
 import { CheckInError, CommonError } from './responses/ErrorCode';
-import { fail, Response, success } from './responses/Response';
+import { fail, get, Response, success } from './responses/Response';
 
 const secretQR = 'secret key 123';
-export class BaseCheckin {
-    public id: number;
-    public time: number;
-    public shift: number;
-    public data: any;
-    public note: string;
-}
 @Authorized()
 @JsonController("/check")
 @OpenAPI({ security: [{ basicAuth: [] }] })
 export class CheckInController {
     constructor(
         private checkinService: CheckInService,
-        @OrmRepository() private settingRepository: SettingRepository) {}
+        @OrmRepository() private settingRepository: SettingRepository,
+        @OrmRepository() private checkinRepository: CheckInRepository) {}
 
     public validateCheckIn(time: number, timeoutCode: number = CheckInError.TIME_TIMEOUT): number {
         const date = new Date(time);
@@ -101,5 +99,31 @@ export class CheckInController {
     @Get('/shift/list')
     public getAllShift(): Promise<Shift[]> {
         return this.checkinService.getAllShift();
+    }
+
+    @Post('/work-shift/update')
+    public async updateWorkShift(@Body() data: WorkShiftUpdate, @Req() req: any): Promise<Response> {
+        const checkin = await this.checkinRepository.findOne({ where: { id: data.checkId, user: { id: req.user.id }} });
+        if (checkin) {
+            return success(this.checkinService.updateWorkShift(req.user, data, checkin));
+        } else {
+            return fail(CommonError.NOT_FOUND, "Checkin not found");
+        }
+    }
+
+    @Get('/work-shift/update/:id')
+    public getWorkShiftUpdate(@Param('id') id: number): Promise<Response> {
+        return this.checkinService.getRequestWorkShift(id).then(res => get(res));
+    }
+
+    @Get('/work-shift/requeted')
+    public getWorkShiftRequeted(@Req() req: any, @QueryParam('month') month: string): Promise<RequestUpdate[]> {
+        return this.checkinService.getRequestedWorkShift(req.user, month);
+    }
+
+    @Get('/checkin/:id')
+    @OnUndefined(200)
+    public getCheckin(@Param('id') id: number): Promise<CheckIn> {
+        return this.checkinRepository.findOne({where: { id }, relations: ["shift"]});
     }
 }

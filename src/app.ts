@@ -14,6 +14,7 @@ import { publicLoader } from './loaders/publicLoader';
 import { swaggerLoader } from './loaders/swaggerLoader';
 import { typeormLoader } from './loaders/typeormLoader';
 import { winstonLoader } from './loaders/winstonLoader';
+import { scheduleLoader } from './loaders/ScheduleLoader';
 
 /**
  * EXPRESS TYPESCRIPT BOILERPLATE
@@ -41,6 +42,7 @@ bootstrapMicroframework({
         homeLoader,
         publicLoader,
         graphqlLoader,
+        scheduleLoader,
     ],
 })
     .then(() => banner(log))

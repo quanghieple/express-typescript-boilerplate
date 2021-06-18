@@ -17,3 +17,7 @@ export const success = (data: any, msg: number = 0): Response => {
 export const fail = (msg: number, data: any = undefined): Response => {
     return new Response(0, msg, data);
 };
+
+export const get = (data: any, msg: number = 0): Response => {
+    return data ? success(data) : fail(msg, data);
+};

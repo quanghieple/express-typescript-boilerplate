@@ -23,5 +23,7 @@ class HomeController {
     public readonly code = 0;
     public readonly INVALID_LOGIN = this.code + 1;
     public readonly UPDATE_FAILED = this.code + 2;
+    public readonly NOT_FOUND = 404;
+    public readonly NO_PERMISSIONS = 401;
 }
 export const CommonError = new HomeController();
